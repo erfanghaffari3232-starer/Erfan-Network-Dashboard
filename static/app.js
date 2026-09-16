@@ -5,4 +5,4 @@ function render(){let q=$('search').value.toLowerCase();let list=devices.filter(
 async function scan(){let b=$('scanBtn');b.disabled=true;b.textContent='⏳ در حال اسکن...';$('status').textContent='در حال بررسی شبکه...';try{let r=await fetch('/api/scan'),d=await r.json();devices=d.devices;render();$('status').textContent=`اسکن تمام شد؛ ${devices.length} دستگاه پاسخ دادند.`;await info()}catch(e){$('status').textContent='خطا در اسکن شبکه.'}b.disabled=false;b.textContent='🔄 اسکن شبکه'}
 async function pingDevice(ip){let r=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'ping',ip})}),d=await r.json();alert(d.ok?`${ip}: ${d.ping||'<1'} ms`:'دستگاه پاسخ نداد')}
 function openDevice(ip){window.open('http://'+ip,'_blank')}
-$('scanBtn').onclick=scan;$('search').oninput=render;$('routerBtn').onclick=()=>{let d=devices.find(x=>x.ip.endsWith('.1'));window.open('http://'+(d?d.ip:'192.168.1.1'),'_blank')};info();
+$('scanBtn').onclick=scan;$('search').oninput=render;$('routerBtn').onclick=()=>location.href='/router';info();

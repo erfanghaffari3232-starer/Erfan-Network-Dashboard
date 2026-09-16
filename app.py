@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, render_template, request
+from router import router_info
 import ipaddress
 import platform
 import socket
@@ -37,10 +38,9 @@ def ping(ip):
 def scan_network():
     ip = local_ip()
     net = ipaddress.ip_network(f"{ip}/24", strict=False)
-    hosts = [str(x) for x in net.hosts()]
     results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=64) as pool:
-        jobs = {pool.submit(ping, host): host for host in hosts}
+        jobs = {pool.submit(ping, str(host)): str(host) for host in net.hosts()}
         for job in concurrent.futures.as_completed(jobs):
             host = jobs[job]
             latency = job.result()
@@ -60,6 +60,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/router")
+def router_page():
+    return render_template("router.html")
+
+
 @app.get("/api/network")
 def network():
     ip = local_ip()
@@ -72,6 +77,11 @@ def network():
     })
 
 
+@app.get("/api/router")
+def router():
+    return jsonify(router_info())
+
+
 @app.get("/api/scan")
 def scan():
     return jsonify({"devices": scan_network()})
@@ -82,9 +92,6 @@ def action():
     data = request.get_json(silent=True) or {}
     action_name = data.get("action")
     ip = data.get("ip", "")
-    allowed = {"open-router", "ping", "copy-ip"}
-    if action_name not in allowed:
-        return jsonify({"ok": False, "message": "Action is not available in this version."}), 400
     if action_name == "open-router":
         return jsonify({"ok": True, "url": f"http://{ip}"})
     if action_name == "ping":

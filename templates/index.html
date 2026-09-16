@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Erfan Network Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <header class="hero">
+      <div>
+        <span class="eyebrow">NETWORK TOOL</span>
+        <h1>⚡ Erfan Network Dashboard</h1>
+        <p>ابزار بررسی شبکه محلی با Python + Flask</p>
+      </div>
+      <button id="scanBtn" class="primary">🔄 اسکن شبکه</button>
+    </header>
+
+    <section class="stats">
+      <div class="card"><span>💻 سیستم من</span><strong id="localIp">...</strong></div>
+      <div class="card"><span>📡 شبکه</span><strong id="network">...</strong></div>
+      <div class="card"><span>🟢 دستگاه‌های آنلاین</span><strong id="deviceCount">0</strong></div>
+      <div class="card"><span>🖥️ نام سیستم</span><strong id="hostname">...</strong></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>دستگاه‌های پیدا شده</h2><p id="status">برای شروع روی «اسکن شبکه» بزن.</p></div>
+        <input id="search" type="search" placeholder="جستجوی IP یا نام دستگاه...">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>دستگاه</th><th>IP Address</th><th>Ping</th><th>وضعیت</th></tr></thead>
+          <tbody id="devices"><tr><td colspan="4" class="empty">هنوز اسکن انجام نشده است.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    <footer>Erfan Network Dashboard • Local Network Scanner</footer>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
